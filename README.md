@@ -30,7 +30,7 @@ The Cardio Data Simulator is a Java-based application designed to simulate real-
 2. Navigate to the project directory:
 
    ```sh
-   cd signal_project
+   cd signal_project paps
    ```
 
 3. Compile and package the application using Maven:
