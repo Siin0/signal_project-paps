@@ -24,7 +24,7 @@ public class FileOutputStrategy implements OutputStrategy {
      * @param baseDirectory string of the directory to output
      */
     public FileOutputStrategy(String baseDirectory) {
-        this.baseDirectory = baseDirectory;
+        this.baseDirectory = baseDirectory; // Removed extra line
     }
 
     /**
