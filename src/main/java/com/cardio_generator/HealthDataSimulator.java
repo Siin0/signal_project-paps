@@ -24,6 +24,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * Simulates pseudo-random data and receives commands from args
+ */
 public class HealthDataSimulator {
 
     private static int patientCount = 50; // Default number of patients

@@ -1,8 +1,11 @@
 package com.cardio_generator.generators;
 
 import java.util.Random;
-import com.cardio_generator.outputs.OutputStrategy;
+import com.cardio_generator.outputs.OutputStrategy; // Removed redundant whitespace
 
+/**
+ * Generates Uses pseudo-random number generators to make alerts according to a number of patients
+ */
 public class AlertGenerator implements PatientDataGenerator {
 
     public static final Random randomGenerator = new Random();
@@ -11,7 +14,7 @@ public class AlertGenerator implements PatientDataGenerator {
     private boolean[] alertStates; // false = resolved, true = pressed
 
     /**
-     * Declare the number of patients
+     * Create an AlertGenerator object of the number of patients
      *
      * @param patientCount The number of patients
      */
