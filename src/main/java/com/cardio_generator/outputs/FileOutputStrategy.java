@@ -7,9 +7,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Class to define what file to output to
+ */
 public class FileOutputStrategy implements OutputStrategy {
 
-    // Changed baseDirectory to baseDirectory
+    // Changed BaseDirectory to baseDirectory
     private String baseDirectory;
 
     // Changed file_map to fileMap

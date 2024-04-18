@@ -1,5 +1,8 @@
 package com.cardio_generator.outputs;
 
+/**
+ * Output and print a specific patient's information
+ */
 public interface OutputStrategy {
 
     /**

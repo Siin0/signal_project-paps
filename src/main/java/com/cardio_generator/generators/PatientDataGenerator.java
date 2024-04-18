@@ -2,6 +2,9 @@ package com.cardio_generator.generators;
 
 import com.cardio_generator.outputs.OutputStrategy;
 
+/**
+ * Calls generate method to ideally generate simulated data
+ */
 public interface PatientDataGenerator {
 
     /**
