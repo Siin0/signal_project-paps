@@ -25,7 +25,7 @@ public class FileOutputStrategy implements OutputStrategy {
     }
 
     /**
-     * Outputs a specified registry's information
+     * Outputs information of a patient
      *
      * @param patientId The ID of the patient
      * @param timestamp The time of registry

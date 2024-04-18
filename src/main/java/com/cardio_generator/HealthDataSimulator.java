@@ -5,7 +5,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.cardio_generator.generators.AlertGenerator;
-
 import com.cardio_generator.generators.BloodPressureDataGenerator;
 import com.cardio_generator.generators.BloodSaturationDataGenerator;
 import com.cardio_generator.generators.BloodLevelsDataGenerator;
@@ -33,9 +32,7 @@ public class HealthDataSimulator {
     private static final Random random = new Random();
 
     public static void main(String[] args) throws IOException {
-
         parseArguments(args);
-
         scheduler = Executors.newScheduledThreadPool(patientCount * 4);
 
         List<Integer> patientIds = initializePatientIds(patientCount);
@@ -44,6 +41,12 @@ public class HealthDataSimulator {
         scheduleTasksForPatients(patientIds);
     }
 
+    /**
+     * Handles requests from the terminal for commands
+     *
+     * @param args Set of commands and the values corresponding to them where possible
+     * @throws IOException Exception occurs if an invalid input is given
+     */
     private static void parseArguments(String[] args) throws IOException {
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
@@ -105,6 +108,9 @@ public class HealthDataSimulator {
         }
     }
 
+    /**
+     * Returns a menu of commands to help the user
+     */
     private static void printHelp() {
         System.out.println("Usage: java HealthDataSimulator [options]");
         System.out.println("Options:");
@@ -122,6 +128,12 @@ public class HealthDataSimulator {
                 "  This command simulates data for 100 patients and sends the output to WebSocket clients connected to port 8080.");
     }
 
+    /**
+     * Creates an arraylist of indices corresponding to the patient count
+     *
+     * @param patientCount Number of patients
+     * @return Arraylist of type Integer of indices up to the patientCount
+     */
     private static List<Integer> initializePatientIds(int patientCount) {
         List<Integer> patientIds = new ArrayList<>();
         for (int i = 1; i <= patientCount; i++) {
@@ -130,6 +142,11 @@ public class HealthDataSimulator {
         return patientIds;
     }
 
+    /**
+     * Generates pseudo-random data for all patients
+     *
+     * @param patientIds A list of patient IDs
+     */
     private static void scheduleTasksForPatients(List<Integer> patientIds) {
         ECGDataGenerator ecgDataGenerator = new ECGDataGenerator(patientCount);
         BloodSaturationDataGenerator bloodSaturationDataGenerator = new BloodSaturationDataGenerator(patientCount);
@@ -146,6 +163,13 @@ public class HealthDataSimulator {
         }
     }
 
+    /**
+     * Adds a task to be scheduled at a certain time
+     *
+     * @param task The task to schedule
+     * @param period The date in timeUnit
+     * @param timeUnit Specify the time unit used
+     */
     private static void scheduleTask(Runnable task, long period, TimeUnit timeUnit) {
         scheduler.scheduleAtFixedRate(task, random.nextInt(5), period, timeUnit);
     }
