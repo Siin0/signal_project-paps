@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FileOutputStrategy implements OutputStrategy {
 
-    // Changed baseDirectory to baseDirectory
+    // Changed BaseDirectory to baseDirectory
     private String baseDirectory;
 
     // Changed file_map to fileMap
@@ -42,7 +42,9 @@ public class FileOutputStrategy implements OutputStrategy {
             return;
         }
         // Set the FilePath variable
-        String FilePath = fileMap.computeIfAbsent(label, k -> Paths.get(baseDirectory, label + ".txt").toString());
+        // Spread over 2 lines to avoid exceeding column limit
+        String FilePath = fileMap.computeIfAbsent(label, k -> Paths.get(baseDirectory, label
+                + ".txt").toString());
 
         // Write the data to the file
         try (PrintWriter out = new PrintWriter(
