@@ -4,7 +4,7 @@ import java.util.Random;
 import com.cardio_generator.outputs.OutputStrategy; // Removed redundant whitespace
 
 /**
- * Generates pseudo-random alerts according to a number of patients
+ * Generates Uses pseudo-random number generators to make alerts according to a number of patients
  */
 public class AlertGenerator implements PatientDataGenerator {
 

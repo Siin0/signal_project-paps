@@ -10,8 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Class to define what file to output to via a string pointing to the directory of said file.
  * Can output information regarding a patient with the output() method
- *
- * @author Adrian Ilker Berruga Garcia
  */
 public class FileOutputStrategy implements OutputStrategy {
 
