@@ -44,13 +44,13 @@ The Cardio Data Simulator is a Java-based application designed to simulate real-
 After packaging, you can run the simulator directly from the executable JAR:
 
 ```sh
-java -jar target/target/cardio_generator-1.0-SNAPSHOT.jar
+java -jar target/cardio_generator-1.0-SNAPSHOT.jar
 ```
 
 To run with specific options (e.g., to set the patient count and choose an output strategy):
 
 ```sh
-java -jar target/target/cardio_generator-1.0-SNAPSHOT.jar --patient-count 100 --output file:./output
+java -jar target/cardio_generator-1.0-SNAPSHOT.jar --patient-count 100 --output file:./output
 ```
 
 ### Supported Output Options
@@ -63,6 +63,11 @@ java -jar target/target/cardio_generator-1.0-SNAPSHOT.jar --patient-count 100 --
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### UML Diagrams
+
+The link to the UML Diagrams of this project can be found here:
+https://github.com/Siin0/signal_project-paps/tree/3181c4a64dee82dd807d50d60c3e0fcf52691412/uml_models
 
 ## Project Members
 - Student ID: 6358205
