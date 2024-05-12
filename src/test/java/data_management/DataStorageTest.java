@@ -43,5 +43,6 @@ class DataStorageTest {
         patient.addRecord(80, "HeartRate", 1714376789988L);
 
         List<PatientRecord> records = patient.getRecords(1714376789000L, 1714376790000L);
+        assertEquals(records.get(0).getMeasurementValue(), 150);
     }
 }
