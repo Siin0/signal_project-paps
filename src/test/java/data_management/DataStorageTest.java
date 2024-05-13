@@ -2,6 +2,7 @@ package data_management;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.data_management.DataReaderClass;
 import com.data_management.Patient;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,9 @@ class DataStorageTest {
     }
 
     @Test
-    void testDataReader(){}
+    void testDataReader() {
+        DataReaderClass reader = new DataReaderClass("src/test/java/data_management/test.txt");
+    }
 
     @Test
     void testAlertTriggers(){}

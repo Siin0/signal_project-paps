@@ -110,7 +110,7 @@ public class AlertGenerator {
      */
     public boolean bloodSaturationAlert(Patient patient) {
         long first = patient.getPatientRecords().get(0).getTimestamp();
-        long last = patient.getPatientRecords().get(patient.getPatientRecords().size()).getTimestamp();
+        long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
 
         ArrayList<PatientRecord> array;
         for (long i = first; i < last; i++) {
@@ -156,7 +156,7 @@ public class AlertGenerator {
         boolean sat = false;
 
         long first = patient.getPatientRecords().get(0).getTimestamp();
-        long last = patient.getPatientRecords().get(patient.getPatientRecords().size()).getTimestamp();
+        long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
 
         ArrayList<PatientRecord> array;
         for (long i = first; i < last; i++) {
@@ -193,7 +193,7 @@ public class AlertGenerator {
      */
     public boolean ecgAlert(Patient patient) {
         long first = patient.getPatientRecords().get(0).getTimestamp();
-        long last = patient.getPatientRecords().get(patient.getPatientRecords().size()).getTimestamp();
+        long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
 
         ArrayList<PatientRecord> array;
         for (long i = first; i < last; i++) {

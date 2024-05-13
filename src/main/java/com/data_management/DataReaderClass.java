@@ -5,7 +5,7 @@ import java.io.IOException;
 public class DataReaderClass implements DataReader {
     private final String dir;
 
-    DataReaderClass(String dir) {
+    public DataReaderClass(String dir) {
         super();
         this.dir = dir;
     }
@@ -22,7 +22,7 @@ public class DataReaderClass implements DataReader {
         try (BufferedReader br = new BufferedReader(new FileReader(directory))) {
             String line;
             while ((line = br.readLine()) != null) {
-                resultStringBuilder.append(line).append("\n");
+                resultStringBuilder.append(line).append(" ");
             }
         }
         return resultStringBuilder.toString();
