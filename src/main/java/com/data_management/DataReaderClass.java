@@ -41,7 +41,13 @@ public class DataReaderClass implements DataReader {
     @Override
     public void readData(DataStorage dataStorage) throws IOException {
         String[] patient = patientData(readFromInputStream(dir));
-        dataStorage.addPatientData(Integer.parseInt(patient[0]), Double.parseDouble(patient[1]),
-                patient[2], Long.parseLong(patient[3]));
+        for (int i = 0; i < patient.length; i += 4) {
+            int patientID = Integer.parseInt(patient[i]);
+            double measurementValue = Double.parseDouble(patient[i + 1]);
+            String measurementType = patient[i + 2];
+            long timeStamp = Long.parseLong(patient[i + 3]);
+            // Add all the values to the dataStorage
+            dataStorage.addPatientData(patientID, measurementValue, measurementType, timeStamp);
+        }
     }
 }

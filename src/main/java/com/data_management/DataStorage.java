@@ -91,6 +91,16 @@ public class DataStorage {
         // Assuming the reader has been properly initialized and can read data into the storage
         reader.readData(storage);
 
+        // Testing for whether the data has been parsed correctly
+        for(Patient patient : storage.getAllPatients()) {
+            for(PatientRecord patientRecord : patient.getPatientRecords()) {
+                System.out.println("Record for Patient ID: " + patientRecord.getPatientId() +
+                        ", Type: " + patientRecord.getRecordType() +
+                        ", Data: " + patientRecord.getMeasurementValue() +
+                        ", Timestamp: " + patientRecord.getTimestamp());
+            }
+        }
+
         // Example of using DataStorage to retrieve and print records for a patient
         List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
         for (PatientRecord record : records) {

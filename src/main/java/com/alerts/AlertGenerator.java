@@ -196,8 +196,8 @@ public class AlertGenerator {
         long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
 
         ArrayList<PatientRecord> array;
-        for (long i = first; i < last; i++) {
-            array = (ArrayList<PatientRecord>) patient.getRecords(i, (i + 600000));
+        for (long i = first; i < last; i++) { // This is assuming the time diff is 1 every time, likely incorrect
+            array = (ArrayList<PatientRecord>) patient.getRecords(i, (i + 600000)); // 10 minutes in ms
             for (int j = 0; j < array.size(); j++) {
                 if (!array.get(j).getRecordType().equals("ECG")) {
                     array.remove(j);
