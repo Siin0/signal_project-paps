@@ -1,6 +1,7 @@
 package com.data_management;
 import java.io.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class DataReaderClass implements DataReader {
     private final String dir;
@@ -40,8 +41,11 @@ public class DataReaderClass implements DataReader {
 
     @Override
     public void readData(DataStorage dataStorage) throws IOException {
-        String[] patient = patientData(readFromInputStream(dir));
-        dataStorage.addPatientData(Integer.parseInt(patient[0]), Double.parseDouble(patient[1]),
-                patient[2], Long.parseLong(patient[3]));
+        String[] patientList = patientData(readFromInputStream(dir));
+        for(int i = 0; i<(patientList.length/4); i++){
+            String[] patient = new String[] {patientList[4*i],patientList[4*i+1],patientList[4*i+2],patientList[4*i+3]};
+            dataStorage.addPatientData(Integer.parseInt(patient[0]), Double.parseDouble(patient[1]),
+                    patient[2], Long.parseLong(patient[3]));
+        }
     }
 }

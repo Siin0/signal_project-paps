@@ -3,7 +3,10 @@ package com.alerts;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data
@@ -40,17 +43,18 @@ public class AlertGenerator {
      *
      * @param patient the patient data to evaluate for alert conditions
      */
-    public void evaluateData(Patient patient) {
-        // Implementation goes here
+    public ArrayList<Alert> evaluateData(Patient patient) {
+        ArrayList<Alert> alerts = new ArrayList<Alert>();
         if (bloodPressureAlert(patient)) {
-            triggerAlert(new Alert(String.valueOf(patient.getID()), "BloodPressure", bloodPressureTime));
+            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "BloodPressure", bloodPressureTime));
         } else if(bloodSaturationAlert(patient)) {
-            triggerAlert(new Alert(String.valueOf(patient.getID()), "BloodSaturation", bloodSaturationTime));
+            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "BloodSaturation", bloodSaturationTime));
         } else if(comboAlert(patient)) {
-            triggerAlert(new Alert(String.valueOf(patient.getID()), "HypotensiveHypoxemia", hhTime));
+            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "HypotensiveHypoxemia", hhTime));
         } else if(ecgAlert(patient)) {
-            triggerAlert(new Alert(String.valueOf(patient.getID()), "ECG", ecgTime));
+            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "ECG", ecgTime));
         }
+        return alerts;
     }
 
     /**
@@ -245,8 +249,8 @@ public class AlertGenerator {
      *
      * @param output Alert from HealthGenerator
      */
-    public void healthGenAlert(Alert output) {
-        triggerAlert(output);
+    public void healthGenAlert(ArrayList<Alert> alerts, Alert output) {
+        triggerAlert(alerts,output);
     }
 
     /**
@@ -257,7 +261,8 @@ public class AlertGenerator {
      *
      * @param alert the alert object containing details about the alert condition
      */
-    private void triggerAlert(Alert alert) {
+    private void triggerAlert(ArrayList<Alert> alerts, Alert alert) {
+        alerts.add(alert);
         // Implementation might involve logging the alert or notifying staff
     }
 }
