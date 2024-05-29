@@ -1,8 +1,17 @@
 package com.data_management;
 
+import com.cardio_generator.outputs.WebSocketOutputStrategy;
 import java.io.IOException;
 
 public interface DataReader {
+
+    /**
+     * Reads data continuously from a web socket
+     *
+     * @param port Specified websocket port
+     */
+    void readDataStream(int port);
+
     /**
      * Reads data from a specified source and stores it in the data storage.
      * 

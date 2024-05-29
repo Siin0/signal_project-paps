@@ -1,10 +1,12 @@
 package com.data_management;
+import com.cardio_generator.outputs.WebSocketOutputStrategy;
+
 import java.io.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class DataReaderClass implements DataReader {
-    private final String dir;
+    private String dir;
+    public WebSocketOutputStrategy socket;
 
     public DataReaderClass(String dir) {
         super();
@@ -14,13 +16,12 @@ public class DataReaderClass implements DataReader {
     /**
      * Converts a file into a string format
      *
-     * @param directory The file directory
      * @return A string of the file
      * @throws IOException If file reader encounters an error (File not found)
      */
-    private String readFromInputStream(String directory) throws IOException {
+    private String readFile() throws IOException {
         StringBuilder resultStringBuilder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(directory))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(dir))) {
             String line;
             while ((line = br.readLine()) != null) {
                 resultStringBuilder.append(line).append(" ");
@@ -40,12 +41,25 @@ public class DataReaderClass implements DataReader {
     }
 
     @Override
-    public void readData(DataStorage dataStorage) throws IOException {
-        String[] patientList = patientData(readFromInputStream(dir));
-        for(int i = 0; i<(patientList.length/4); i++){
-            String[] patient = new String[] {patientList[4*i],patientList[4*i+1],patientList[4*i+2],patientList[4*i+3]};
-            dataStorage.addPatientData(Integer.parseInt(patient[0]), Double.parseDouble(patient[1]),
-                    patient[2], Long.parseLong(patient[3]));
+    public void readDataStream(int port) {
+        socket = new WebSocketOutputStrategy(port);
+
+    }
+
+    public void addData(DataStorage dataStorage, String[] data) {
+        for (int i = 0; i < data.length/4; i+= 4) {
+            int patientID = Integer.parseInt(data[4*i]);
+            double measurementValue = Double.parseDouble(data[4*i + 1]);
+            String measurementType = data[4*i + 2];
+            long timeStamp = Long.parseLong(data[4*i + 3]);
+            // Add all the values to the dataStorage
+            dataStorage.addPatientData(patientID, measurementValue, measurementType, timeStamp);
         }
+    }
+
+    @Override
+    public void readData(DataStorage dataStorage) throws IOException {
+        String[] patient = patientData(readFile());
+        addData(dataStorage, patient);
     }
 }

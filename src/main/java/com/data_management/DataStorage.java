@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
+import com.cardio_generator.generators.BloodPressureDataGenerator;
+import com.cardio_generator.outputs.WebSocketOutputStrategy;
 
 /**
  * Manages storage and retrieval of patient data within a healthcare monitoring
@@ -88,8 +90,25 @@ public class DataStorage {
         DataReader reader = new DataReaderClass("src/test/java/data_management/test.txt");
         DataStorage storage = new DataStorage();
 
+        reader.readDataStream(8080);
+        WebSocketOutputStrategy test = new WebSocketOutputStrategy(8080);
+        BloodPressureDataGenerator gen = new BloodPressureDataGenerator(100);
+        for (int i = 0; i < 100; i++) {
+            gen.generate(i, test);
+        }
+
         // Assuming the reader has been properly initialized and can read data into the storage
         reader.readData(storage);
+
+        // Testing for whether the data has been parsed correctly
+        for(Patient patient : storage.getAllPatients()) {
+            for(PatientRecord patientRecord : patient.getPatientRecords()) {
+                System.out.println("Record for Patient ID: " + patientRecord.getPatientId() +
+                        ", Type: " + patientRecord.getRecordType() +
+                        ", Data: " + patientRecord.getMeasurementValue() +
+                        ", Timestamp: " + patientRecord.getTimestamp());
+            }
+        }
 
         // Example of using DataStorage to retrieve and print records for a patient
         List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
