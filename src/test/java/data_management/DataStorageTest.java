@@ -23,6 +23,12 @@ class DataStorageTest {
         List<PatientRecord> records = storage.getRecords(1, 1714376789050L, 1714376789051L);
         assertEquals(2, records.size()); // Check if two records are retrieved
         assertEquals(100.0, records.get(0).getMeasurementValue()); // Validate first record
+        //Overwrite the first record and add a third
+        storage.addPatientData(1, 150.0, "WhiteBloodCells", 1714376789050L);
+        storage.addPatientData(1, 120.0, "ECG", 1714376789050L);
+        records = storage.getRecords(1, 1714376789050L, 1714376789051L);
+        assertEquals(3, records.size()); // Check if record was overwritten or added
+        assertEquals(150.0, records.get(1).getMeasurementValue()); // Check first record was changed
     }
 
     @Test
