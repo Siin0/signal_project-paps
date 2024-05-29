@@ -47,7 +47,7 @@ public class DataReaderClass implements DataReader {
     }
 
     public void addData(DataStorage dataStorage, String[] data) {
-        for (int i = 0; i < data.length/4; i+= 4) {
+        for (int i = 0; i < data.length/4; i++) {
             int patientID = Integer.parseInt(data[4*i]);
             double measurementValue = Double.parseDouble(data[4*i + 1]);
             String measurementType = data[4*i + 2];
