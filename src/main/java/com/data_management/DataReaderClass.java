@@ -1,7 +1,4 @@
 package com.data_management;
-import com.cardio_generator.generators.BloodPressureDataGenerator;
-import com.cardio_generator.generators.PatientDataGenerator;
-import com.cardio_generator.outputs.OutputStrategy;
 import com.cardio_generator.outputs.WebSocketOutputStrategy;
 
 import java.io.*;
@@ -50,11 +47,11 @@ public class DataReaderClass implements DataReader {
     }
 
     public void addData(DataStorage dataStorage, String[] data) {
-        for (int i = 0; i < data.length; i+= 4) {
-            int patientID = Integer.parseInt(data[i]);
-            double measurementValue = Double.parseDouble(data[i + 1]);
-            String measurementType = data[i + 2];
-            long timeStamp = Long.parseLong(data[i + 3]);
+        for (int i = 0; i < data.length/4; i+= 4) {
+            int patientID = Integer.parseInt(data[4*i]);
+            double measurementValue = Double.parseDouble(data[4*i + 1]);
+            String measurementType = data[4*i + 2];
+            long timeStamp = Long.parseLong(data[4*i + 3]);
             // Add all the values to the dataStorage
             dataStorage.addPatientData(patientID, measurementValue, measurementType, timeStamp);
         }
