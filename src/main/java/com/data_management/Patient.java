@@ -44,6 +44,16 @@ public class Patient {
         this.patientRecords.add(record);
     }
 
+    /**
+     * Removes a record of a given type at a given timestamp.
+     * @param recordType the type of record, e.g., "HeartRate", "BloodPressure"
+     * @param timestamp the time at which the measurement was taken
+     */
+    public void delRecord(String recordType, long timestamp){
+        this.patientRecords.removeIf(r -> (
+                r.getRecordType().equals(recordType) && r.getTimestamp() == timestamp));
+    }
+
     public List<PatientRecord> getPatientRecords() {
         return patientRecords;
     }

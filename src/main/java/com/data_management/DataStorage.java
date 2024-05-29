@@ -45,6 +45,13 @@ public class DataStorage {
             patient = new Patient(patientId);
             patientMap.put(patientId, patient);
         }
+        //check to overwrite matching records
+        List<PatientRecord> possibleDuplicates = patient.getRecords(timestamp,timestamp);
+        for (PatientRecord record : patient.getPatientRecords()) {
+            if(record.getRecordType().equals(recordType)){
+                patient.delRecord(recordType, timestamp);
+            }
+        }
         patient.addRecord(measurementValue, recordType, timestamp);
     }
 
