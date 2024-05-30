@@ -1,12 +1,16 @@
 package com.data_management;
 
 import java.net.URI;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
-public class WebSocketDataClient extends WebSocketClient {
-    public WebSocketDataClient(URI serverURI) {
-        super(serverURI);
+public class WebSocketData extends WebSocketClient {
+    DataStorage data;
+
+    public WebSocketData(URI serveruri, DataStorage data) {
+        super(serveruri);
+        this.data = data;
     }
 
     @Override
@@ -16,15 +20,13 @@ public class WebSocketDataClient extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        System.out.println("received: " + message);
+
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
         // The close codes are documented in class org.java_websocket.framing.CloseFrame
-        System.out.println(
-                "Connection closed by " + (remote ? "remote peer" : "us") + " Code: " + code + " Reason: "
-                        + reason);
+        System.out.println("Connection closed: " + reason);
     }
 
     @Override

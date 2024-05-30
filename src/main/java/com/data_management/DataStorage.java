@@ -1,6 +1,7 @@
 package com.data_management;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,20 +93,26 @@ public class DataStorage {
      * 
      * @param args command line arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         // DataReader is not defined in this scope, should be initialized appropriately.
-        DataReader reader = new DataReaderClass("src/test/java/data_management/test.txt");
+        DataReader reader = new DataReaderClass();
         DataStorage storage = new DataStorage();
 
-        reader.readDataStream(8080);
+        String hostname = "localhost";  // Replace with your server's hostname or IP
+        int port = 8080;  // Replace with your server's port
+        String path = "/websocket";  // Replace with the appropriate path for your server
+
+        // Construct the WebSocket URI
+        String uri = String.format("ws://%s:%d%s", hostname, port, path);
+
         WebSocketOutputStrategy test = new WebSocketOutputStrategy(8080);
         BloodPressureDataGenerator gen = new BloodPressureDataGenerator(100);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 2; i++) {
             gen.generate(i, test);
         }
 
         // Assuming the reader has been properly initialized and can read data into the storage
-        reader.readData(storage);
+        reader.readFile(storage, "src/test/java/data_management/test.txt");
 
         // Testing for whether the data has been parsed correctly
         for(Patient patient : storage.getAllPatients()) {

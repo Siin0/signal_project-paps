@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DataReaderTest {
     @Test
     void testDataReader() throws IOException {
-        DataReaderClass reader = new DataReaderClass("src/test/java/data_management/test.txt");
+        DataReaderClass reader = new DataReaderClass();
         DataStorage dataStorage = new DataStorage();
-        reader.readData(dataStorage);
+        reader.readFile(dataStorage, "src/test/java/data_management/test.txt");
         assertEquals(29310, dataStorage.getRecords(300, 0L, 999999999L).get(0).getMeasurementValue());
         assertEquals("BloodPressure", dataStorage.getRecords(200, 0L, 999999999L).get(0).getRecordType());
     }
