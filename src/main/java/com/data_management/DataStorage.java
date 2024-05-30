@@ -98,13 +98,6 @@ public class DataStorage {
         DataReader reader = new DataReaderClass();
         DataStorage storage = new DataStorage();
 
-        String hostname = "localhost";  // Replace with your server's hostname or IP
-        int port = 8080;  // Replace with your server's port
-        String path = "/websocket";  // Replace with the appropriate path for your server
-
-        // Construct the WebSocket URI
-        String uri = String.format("ws://%s:%d%s", hostname, port, path);
-
         WebSocketOutputStrategy test = new WebSocketOutputStrategy(8080);
         BloodPressureDataGenerator gen = new BloodPressureDataGenerator(100);
         for (int i = 0; i < 2; i++) {

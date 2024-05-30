@@ -33,16 +33,18 @@ public class DataReaderClass implements DataReader {
      * @param string The given string
      * @return A string array of words
      */
-    private String[] patientData(String string) {
+    private String[] splitData(String string) {
         return string.split(" ");
     }
 
     @Override
     public void readDataStream(DataStorage data, URI uri)  {
         WebSocketData webs = new WebSocketData(uri, data);
+        webs.connect();
     }
 
-    public void addData(DataStorage dataStorage, String[] data) {
+    public void addData(DataStorage dataStorage, String message) {
+        String[] data = splitData(message);
         for (int i = 0; i < data.length/4; i++) {
             int patientID = Integer.parseInt(data[4*i]);
             double measurementValue = Double.parseDouble(data[4*i + 1]);
@@ -55,7 +57,6 @@ public class DataReaderClass implements DataReader {
 
     @Override
     public void readFile(DataStorage dataStorage, String dir) throws IOException {
-        String[] patient = patientData(fileToString(dir));
-        addData(dataStorage, patient);
+        addData(dataStorage, fileToString(dir));
     }
 }

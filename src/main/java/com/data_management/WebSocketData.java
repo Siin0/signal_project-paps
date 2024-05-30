@@ -6,6 +6,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 public class WebSocketData extends WebSocketClient {
+    DataReaderClass reader = new DataReaderClass();
     DataStorage data;
 
     public WebSocketData(URI serveruri, DataStorage data) {
@@ -20,7 +21,7 @@ public class WebSocketData extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-
+        reader.addData(data, message);
     }
 
     @Override
