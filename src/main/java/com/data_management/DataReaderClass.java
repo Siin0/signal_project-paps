@@ -37,12 +37,24 @@ public class DataReaderClass implements DataReader {
         return string.split(" ");
     }
 
+    /**
+     * Reads data continuously from a websocket server
+     *
+     * @param data The dataStorage to write to
+     * @param uri The URI of the server
+     */
     @Override
     public void readDataStream(DataStorage data, URI uri)  {
         WebSocketData webs = new WebSocketData(uri, data);
         webs.connect();
     }
 
+    /**
+     * Adds data to the dataStorage, assumes String is standardized (int, double, string, long)
+     *
+     * @param dataStorage Data storage to store to
+     * @param message String to store to said data storage
+     */
     public void addData(DataStorage dataStorage, String message) {
         String[] data = splitData(message);
         for (int i = 0; i < data.length/4; i++) {
@@ -55,6 +67,13 @@ public class DataReaderClass implements DataReader {
         }
     }
 
+    /**
+     * Reads a file and adds its data to a data storage
+     *
+     * @param dataStorage the storage where data will be stored
+     * @param dir the directory of said file
+     * @throws IOException If file reader encounters an error (File not found)
+     */
     @Override
     public void readFile(DataStorage dataStorage, String dir) throws IOException {
         addData(dataStorage, fileToString(dir));
