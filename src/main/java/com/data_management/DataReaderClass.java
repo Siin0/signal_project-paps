@@ -55,15 +55,19 @@ public class DataReaderClass implements DataReader {
      * @param dataStorage Data storage to store to
      * @param message String to store to said data storage
      */
-    public void addData(DataStorage dataStorage, String message) {
-        String[] data = splitData(message);
-        for (int i = 0; i < data.length/4; i++) {
-            int patientID = Integer.parseInt(data[4*i]);
-            double measurementValue = Double.parseDouble(data[4*i + 1]);
-            String measurementType = data[4*i + 2];
-            long timeStamp = Long.parseLong(data[4*i + 3]);
-            // Add all the values to the dataStorage
-            dataStorage.addPatientData(patientID, measurementValue, measurementType, timeStamp);
+    public void addData(DataStorage dataStorage, String message) throws IllegalArgumentException {
+        try {
+            String[] data = splitData(message);
+            for (int i = 0; i < data.length/4; i++) {
+                int patientID = Integer.parseInt(data[4*i]);
+                double measurementValue = Double.parseDouble(data[4*i + 1].replace("%", ""));
+                String measurementType = data[4*i + 2];
+                long timeStamp = Long.parseLong(data[4*i + 3]);
+                // Add all the values to the dataStorage
+                dataStorage.addPatientData(patientID, measurementValue, measurementType, timeStamp);
+            }
+        } catch (IllegalArgumentException ex) {
+            System.out.println("Data was not readable: " + ex);
         }
     }
 

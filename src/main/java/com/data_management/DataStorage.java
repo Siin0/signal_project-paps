@@ -97,7 +97,7 @@ public class DataStorage {
         // DataReader is not defined in this scope, should be initialized appropriately.
         DataReader reader = new DataReaderClass();
         DataStorage storage = new DataStorage();
-
+        
         WebSocketOutputStrategy test = new WebSocketOutputStrategy(8080);
         BloodPressureDataGenerator gen = new BloodPressureDataGenerator(100);
         for (int i = 0; i < 2; i++) {
