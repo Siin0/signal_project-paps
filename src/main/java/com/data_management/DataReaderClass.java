@@ -45,7 +45,7 @@ public class DataReaderClass implements DataReader {
      */
     @Override
     public void readDataStream(DataStorage data, URI uri)  {
-        WebSocketData webs = new WebSocketData(uri, data);
+        WebSocketClient webs = new WebSocketClient(uri, data);
         webs.connect();
     }
 
@@ -56,18 +56,19 @@ public class DataReaderClass implements DataReader {
      * @param message String to store to said data storage
      */
     public void addData(DataStorage dataStorage, String message) throws IllegalArgumentException {
-        try {
-            String[] data = splitData(message);
-            for (int i = 0; i < data.length/4; i++) {
-                int patientID = Integer.parseInt(data[4*i]);
-                double measurementValue = Double.parseDouble(data[4*i + 1].replace("%", ""));
-                String measurementType = data[4*i + 2];
-                long timeStamp = Long.parseLong(data[4*i + 3]);
+        String[] data = splitData(message);
+
+        for (int i = 0; i < data.length/4; i++) {
+            try {
+                int patientID = Integer.parseInt(data[4 * i]);
+                long timeStamp = Long.parseLong(data[4 * i + 1]);
+                String measurementType = data[4 * i + 2];
+                double measurementValue = Double.parseDouble(data[4 * i + 3].replace("%", ""));
                 // Add all the values to the dataStorage
                 dataStorage.addPatientData(patientID, measurementValue, measurementType, timeStamp);
+            } catch (IllegalArgumentException e){
+                System.out.println("Discarding unreadable line, continuing...");
             }
-        } catch (IllegalArgumentException ex) {
-            System.out.println("Data was not readable: " + ex);
         }
     }
 

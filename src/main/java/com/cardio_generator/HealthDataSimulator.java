@@ -145,6 +145,7 @@ public class HealthDataSimulator {
         return patientIds;
     }
 
+
     /**
      * Generates pseudo-random data for all patients
      *

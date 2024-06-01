@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DataReaderTest {
     @Test
     void testDataReader() throws IOException {
+        System.out.println("Testing data reader with a mix of readable and unreadable data:");
         DataReaderClass reader = new DataReaderClass();
         DataStorage dataStorage = new DataStorage();
         reader.readFile(dataStorage, "src/test/java/data_management/test.txt");

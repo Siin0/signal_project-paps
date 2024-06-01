@@ -35,7 +35,8 @@ public class AlertGenerator implements PatientDataGenerator {
                 if (randomGenerator.nextDouble() < 0.9) { // 90% chance to resolve
                     alertStates[patientId] = false;
                     // Output the alert
-                    outputStrategy.output(patientId, System.currentTimeMillis(), "Alert", "resolved");
+                    //System.out.println("Alert triggered");
+                    //outputStrategy.output(patientId, System.currentTimeMillis(), "Alert", "resolved");
                 }
             } else {
                 double lambda = 0.1; // Average rate (alerts per period), adjust based on desired frequency
@@ -45,7 +46,8 @@ public class AlertGenerator implements PatientDataGenerator {
                 if (alertTriggered) {
                     alertStates[patientId] = true;
                     // Output the alert
-                    outputStrategy.output(patientId, System.currentTimeMillis(), "Alert", "triggered");
+                    //System.out.println("Alert triggered");
+                    //outputStrategy.output(patientId, System.currentTimeMillis(), "Alert", "triggered");
                 }
             }
         } catch (Exception e) {
