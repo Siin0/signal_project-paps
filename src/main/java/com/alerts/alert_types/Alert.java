@@ -1,4 +1,6 @@
-package com.alerts;
+package com.alerts.alert_types;
+
+import java.util.Date;
 
 // Represents an alert
 public class Alert {
@@ -22,5 +24,11 @@ public class Alert {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public void show(){
+        String date = (new Date(getTimestamp())).toString();
+        String id = this.getPatientId();
+        System.out.println("ALERT: Patient#"+id+" | "+condition+" | "+date);
     }
 }
