@@ -1,6 +1,10 @@
 package com.alerts;
 
 import com.alerts.alert_types.Alert;
+import com.alerts.factories.AlertFactory;
+import com.alerts.factories.BloodOxygenAlertFactory;
+import com.alerts.factories.BloodPressureAlertFactory;
+import com.alerts.factories.ECGAlertFactory;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
@@ -19,6 +23,7 @@ public class AlertGenerator {
     private long bloodSaturationTime;
     private long hhTime;
     private long ecgTime;
+    private long manualTime;
 
     /**
      * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}.
@@ -33,8 +38,8 @@ public class AlertGenerator {
     }
 
     /**
-     * Evaluates the specified patient's data to determine if any alert conditions
-     * are met. If a condition is met, an alert is triggered via the
+     * Evaluates the specified patient's data to determine what, if any, alert conditions
+     * are met. If a condition is met, an alert created and triggered via the
      * {@link #triggerAlert}
      * method. This method should define the specific conditions under which an
      * alert
@@ -44,25 +49,51 @@ public class AlertGenerator {
      */
     public ArrayList<Alert> evaluateData(Patient patient) {
         ArrayList<Alert> alerts = new ArrayList<Alert>();
-        if (bloodPressureAlert(patient)) {
-            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "BloodPressure", bloodPressureTime));
-        } else if(bloodSaturationAlert(patient)) {
-            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "BloodSaturation", bloodSaturationTime));
-        } else if(comboAlert(patient)) {
-            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "HypotensiveHypoxemia", hhTime));
-        } else if(ecgAlert(patient)) {
-            triggerAlert(alerts, new Alert(String.valueOf(patient.getID()), "ECG", ecgTime));
+        AlertFactory alertFactory;
+        String condition;
+        long timestamp;
+
+        condition = bloodPressureAlert(patient);
+        if (!condition.equals("noAlert")){
+            timestamp = bloodPressureTime;
+            alertFactory = new BloodPressureAlertFactory();
+            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
         }
+        condition = bloodSaturationAlert(patient);
+        if (!condition.equals("noAlert")){
+            timestamp = bloodSaturationTime;
+            alertFactory = new BloodOxygenAlertFactory();
+            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
+        }
+        condition = ecgAlert(patient);
+        if (!condition.equals("noAlert")){
+            timestamp = ecgTime;
+            alertFactory = new ECGAlertFactory();
+            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
+        }
+        condition = comboAlert(patient);
+        if (!condition.equals("noAlert")){
+            timestamp = hhTime;
+            alertFactory = new BloodPressureAlertFactory();
+            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
+        }
+        condition = manualAlert(patient);
+        if (!condition.equals("noAlert")){
+            timestamp = manualTime;
+            alertFactory = new BloodPressureAlertFactory();
+            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
+        }
+
         return alerts;
     }
 
     /**
-     * Determines whether a blood pressure alert should be sent
+     * Determines whether a blood pressure alert should be sent and what kind
      *
      * @param patient Target patient
-     * @return true if an alert should be sent
+     * @return the alert condition as string
      */
-    public boolean bloodPressureAlert(Patient patient) {
+    public String bloodPressureAlert(Patient patient) {
         ArrayList<Double> sysData = new ArrayList<>();
         ArrayList<Double> diaData = new ArrayList<>();
 
@@ -78,40 +109,65 @@ public class AlertGenerator {
             if (sys || s.equals("BloodPressure")) {
                 sysData.add(patient.getPatientRecords().get(i).getMeasurementValue());
                 if (sysData.size() > 3) {
-                    sysData.remove(3);
+                    sysData.remove(0); //roll 3-datum window
                 }
+                int trendsUp = 0;
+                int trendsDown = 0;
                 for (int j = 0; j < sysData.size() - 1; j++) {
-                    if ((Math.abs(sysData.get(j) - sysData.get(j + 1)) > 10)
-                            || (sysData.get(j) > 180) || (sysData.get(j) < 90)) {
-                        bloodPressureTime = patient.getPatientRecords().get(i).getTimestamp();
-                        return true;
+                    bloodPressureTime = patient.getPatientRecords().get(i).getTimestamp();
+                    if (sysData.get(j + 1) - sysData.get(j) < 10) {
+                        trendsUp++; //value must exceed threshold consecutively to trigger
+                        if (trendsUp >= 3){return "systolicTrendIncrease";}
+                    } else if (sysData.get(j + 1) - sysData.get(j) > -10) {
+                        trendsDown++;
+                        if (trendsDown >= 3){return "systolicTrendDecrease";}
+                    } else if (sysData.get(j) > 180) { //check critical thresholds
+                        return "systolicHighCritical";
+                    } else if (sysData.get(j) < 90) {
+                        return "systolicLowCritical";
+                    } else {
+                        trendsUp = 0;
+                        trendsDown = 0;
                     }
                 }
+
             } else if (dia) {
                 diaData.add(patient.getPatientRecords().get(i).getMeasurementValue());
                 if (diaData.size() > 3) {
-                    diaData.remove(3);
+                    diaData.remove(0); //roll 3-datum window
                 }
+                int trendsUp = 0;
+                int trendsDown = 0;
                 for (int j = 0; j < diaData.size() - 1; j++) {
-                    if ((Math.abs(diaData.get(j) - diaData.get(j + 1)) > 10)
-                            || (diaData.get(j) > 120) || (diaData.get(j) < 60)) {
-                        bloodPressureTime = patient.getPatientRecords().get(i).getTimestamp();
-                        return true;
+                    bloodPressureTime = patient.getPatientRecords().get(i).getTimestamp();
+                    if (diaData.get(j + 1) - diaData.get(j) < 10) {
+                        trendsUp++; //value must exceed threshold consecutively to trigger
+                        if (trendsUp >= 3){return "diastolicTrendIncrease";}
+                    } else if (diaData.get(j + 1) - diaData.get(j) > -10) {
+                        trendsDown++;
+                        if (trendsDown >= 3){return "diastolicTrendDecrease";}
+                    } else if (diaData.get(j) > 120) { //check critical thresholds
+                        return "diastolicHighCritical";
+                    } else if (diaData.get(j) < 60) {
+                        return "diastolicLowCritical";
+                    } else {
+                        trendsUp = 0;
+                        trendsDown = 0;
                     }
                 }
             }
         }
 
-        return false;
+        return "noAlert";
     }
 
     /**
-     * Determines whether a blood saturation alert should be sent
+     * Determines whether a blood saturation alert should be sent and what kind
      *
      * @param patient Target patient
-     * @return true if an alert should be sent
+     * @return the alert condition as string
      */
-    public boolean bloodSaturationAlert(Patient patient) {
+    public String bloodSaturationAlert(Patient patient) {
         long first = patient.getPatientRecords().get(0).getTimestamp();
         long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
 
@@ -131,7 +187,7 @@ public class AlertGenerator {
                 double aux = patientRecord.getMeasurementValue();
                 if (aux < 92) {
                     bloodSaturationTime = patientRecord.getTimestamp();
-                    return true;
+                    return "lowSaturation";
                 } else if (aux > high) {
                     bloodSaturationTime = patientRecord.getTimestamp();
                     high = aux;
@@ -141,20 +197,20 @@ public class AlertGenerator {
                 }
             }
                 if ((high - low) > 5) {
-                    return true;
+                    return "saturationRapidDrop";
                 }
 
             }
-        return false;
+        return "noAlert";
     }
 
     /**
      * Determines whether a Hypotensive Hypoxemia alert should be sent
      *
      * @param patient Target patient
-     * @return true if an alert should be sent
+     * @return the alert condition as string
      */
-    public boolean comboAlert(Patient patient) {
+    public String comboAlert(Patient patient) {
         boolean sys = false;
         boolean sat = false;
 
@@ -185,16 +241,20 @@ public class AlertGenerator {
                 }
             }
         }
-        return (sat && sys);
+        if (sat && sys){
+            return "hypotensiveHypoxemia";
+        } else {
+            return "noAlert";
+        }
     }
 
     /**
      * Determines whether an ECG alert should be sent
      *
      * @param patient Target patient
-     * @return true if an alert should be sent
+     * @return the alert condition as string
      */
-    public boolean ecgAlert(Patient patient) {
+    public String ecgAlert(Patient patient) {
         long first = patient.getPatientRecords().get(0).getTimestamp();
         long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
 
@@ -212,20 +272,34 @@ public class AlertGenerator {
                 if(patientRecord.getMeasurementValue() < 50 ||
                         patientRecord.getMeasurementValue() > 100) {
                     ecgTime = patientRecord.getTimestamp();
-                    return true;
+                    return "abnormalECG";
                 }
             }
 
             long aux = irregularPatterns(array);
             if(aux > 0) {
                 ecgTime = aux;
-                return true;
+                return "abnormalECG";
             }
         }
 
-        return false;
+        return "noAlert";
     }
 
+    /**
+     *
+     * @param patient Target patient
+     * @return the alert condition as string
+     */
+    private String manualAlert(Patient patient){
+        //example, possibly connected to physical button in hospital
+        boolean buttonPressed = false;
+        if(buttonPressed){
+            return "manualAlert";
+        } else {
+            return "noAlert";
+        }
+    }
     /**
      * Determines if there appear any patterns that may suggest irregularities in heartbeat
      *
@@ -262,6 +336,7 @@ public class AlertGenerator {
      */
     private void triggerAlert(ArrayList<Alert> alerts, Alert alert) {
         alerts.add(alert);
+        alert.show();
         // Implementation might involve logging the alert or notifying staff
     }
 }

@@ -34,16 +34,16 @@ public class AlertGenerationTest {
         Patient patient100 = storage.getAllPatients().get(0);
         Patient patient200 = storage.getAllPatients().get(1);
         Patient patient300 = storage.getAllPatients().get(2);
-        assertFalse(alertGenerator.ecgAlert(patient100));
-        assertFalse(alertGenerator.ecgAlert(patient200));
-        assertFalse(alertGenerator.ecgAlert(patient300));
+        assertEquals("noAlert", alertGenerator.ecgAlert(patient100));
+        assertEquals("noAlert", alertGenerator.ecgAlert(patient200));
+        assertEquals("noAlert", alertGenerator.ecgAlert(patient300));
 
         storage.addPatientData(100, 90, "ECG", 400000L);
-        assertTrue(alertGenerator.ecgAlert(patient100));
+        assertEquals("abnormalECG", alertGenerator.ecgAlert(patient100));
         storage.addPatientData(200, 49, "ECG", 400000L);
-        assertTrue(alertGenerator.ecgAlert(patient200));
+        assertEquals("abnormalECG", alertGenerator.ecgAlert(patient200));
         storage.addPatientData(300, 101, "ECG", 400000L);
-        assertTrue(alertGenerator.ecgAlert(patient300));
+        assertEquals("abnormalECG", alertGenerator.ecgAlert(patient300));
     }
 
     @Test
