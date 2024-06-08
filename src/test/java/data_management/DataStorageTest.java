@@ -42,4 +42,14 @@ class DataStorageTest {
         assertEquals(records.get(1).getRecordType(), "BloodPressure");
         assertEquals(records.get(2).getTimestamp(), 1714376789988L);
     }
+
+    @Test
+    void testSingleton() {
+//        DataStorage thing = new DataStorage(); Doesn't work since constructor is private
+        DataStorage storage = DataStorage.getInstance();
+        storage.addPatientData(1, 100.0, "WhiteBloodCells", 1714376789050L);
+        storage.addPatientData(1, 200.0, "WhiteBloodCells", 1714376789051L);
+        DataStorage storage2 = DataStorage.getInstance();
+        assertEquals(100.0, storage2.getPatient(1).getPatientRecords().get(0).getMeasurementValue());
+    }
 }

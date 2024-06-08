@@ -32,7 +32,7 @@ public class DataStorage {
     
     public static DataStorage getInstance() {
         if(instance == null) {
-            instance = DataStorage.getInstance();
+            instance = new DataStorage();
         }
         return instance;
     }
