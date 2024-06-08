@@ -29,7 +29,19 @@ public class DataStorage {
     private DataStorage() {
         this.patientMap = new HashMap<>();
     }
-    
+
+    /**
+     * Deletes the current instance of the data storage
+     */
+    public static void deleteInstance() {
+        instance = null;
+    }
+
+    /**
+     * Singleton pattern to keep only one instance of a data storage active at a time
+     *
+     * @return The current instance of the data storage
+     */
     public static DataStorage getInstance() {
         if(instance == null) {
             instance = new DataStorage();
