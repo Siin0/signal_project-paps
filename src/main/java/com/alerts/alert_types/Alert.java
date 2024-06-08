@@ -1,9 +1,10 @@
 package com.alerts.alert_types;
 
+import com.alerts.decorators.AlertInterface;
 import java.util.Date;
 
 // Represents an alert
-public class Alert {
+public class Alert implements AlertInterface {
     private String patientId;
     private String condition;
     private long timestamp;

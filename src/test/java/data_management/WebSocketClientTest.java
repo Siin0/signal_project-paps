@@ -18,7 +18,7 @@ public class WebSocketClientTest {
         int seconds = 10;
         System.out.println("Testing WebSocket...");
         HealthDataSimulator.main(new String[]{"--output", "websocket:8080","--patient-count","50"});
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         WebSocketClient client = new WebSocketClient(new URI("ws://localhost:8080"), storage);
         client.connect();
         System.out.println("Sending data for "+seconds+" seconds...");
@@ -33,7 +33,7 @@ public class WebSocketClientTest {
         int seconds = 10;
         System.out.println("Testing connectivity...");
         HealthDataSimulator.main(new String[]{"--output", "websocket:80","--patient-count","50"});
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         WebSocketClient client = new WebSocketClient(new URI("ws://localhost:80"), storage);
         client.connect();
         System.out.println("Sending data for "+seconds+" seconds...");

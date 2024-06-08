@@ -28,11 +28,21 @@ import java.util.ArrayList;
  * Simulates pseudo-random data and receives commands from args
  */
 public class HealthDataSimulator {
-
+    private static HealthDataSimulator instance = null;
     private static int patientCount = 50; // Default number of patients
     private static ScheduledExecutorService scheduler;
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy(); // Default output strategy
     private static final Random random = new Random();
+
+    private HealthDataSimulator() {
+    }
+
+    public static HealthDataSimulator getInstance() {
+        if (instance == null) {
+            instance = new HealthDataSimulator();
+        }
+        return instance;
+    }
 
     public static void main(String[] args) throws IOException {
         parseArguments(args);
