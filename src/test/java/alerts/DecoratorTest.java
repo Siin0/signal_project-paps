@@ -9,7 +9,7 @@ public class DecoratorTest {
     @Test
     public void testRepeatDecorator() {
         Alert alert = new Alert("1", "BloodSaturation", 100);
-        Alert test = new RepeatedAlertDecorator()
+        //Alert test = new RepeatedAlertDecorator()
     }
 
     @Test

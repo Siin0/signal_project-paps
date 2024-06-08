@@ -1,6 +1,5 @@
 package alerts;
 
-import com.alerts.AlertGenerator;
 import com.alerts.strategies.AlertStrategy;
 import com.alerts.strategies.BloodPressureStrategy;
 import com.data_management.DataStorage;
@@ -8,17 +7,13 @@ import com.data_management.Patient;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class BloodPressureAlertTest {
     @Test
     void testBloodPressureStrategy(){
-        DataStorage storage = new DataStorage();
-        AlertGenerator alertGenerator = new AlertGenerator(storage);
+        DataStorage storage = DataStorage.getInstance();
 
         populate(storage);
 
@@ -58,6 +53,7 @@ public class BloodPressureAlertTest {
         //check that the correct number of alerts were triggered in total
         assertEquals(0, healthyAlerts.size());
         assertEquals(10, unhealthyAlerts.size());
+        storage.deleteInstance();
     }
 
     public static void populate(DataStorage storage){

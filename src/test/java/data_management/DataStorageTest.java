@@ -27,6 +27,7 @@ class DataStorageTest {
         records = storage.getRecords(1, 1714376789050L, 1714376789051L);
         assertEquals(3, records.size()); // Check if record was overwritten or added
         assertEquals(150.0, records.get(1).getMeasurementValue()); // Check first record was changed
+        storage.deleteInstance();
     }
 
     @Test
@@ -51,5 +52,6 @@ class DataStorageTest {
         storage.addPatientData(1, 200.0, "WhiteBloodCells", 1714376789051L);
         DataStorage storage2 = DataStorage.getInstance();
         assertEquals(100.0, storage2.getPatient(1).getPatientRecords().get(0).getMeasurementValue());
+        storage.deleteInstance();
     }
 }

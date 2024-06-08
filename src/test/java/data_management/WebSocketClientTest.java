@@ -26,6 +26,7 @@ public class WebSocketClientTest {
         client.closeConnection(1000, "Test complete.");
         System.out.println(storage.getAllPatients().size()+" patients logged.");
         assertEquals(50, storage.getAllPatients().size());
+        storage.deleteInstance();
     }
 
     @Test
@@ -57,5 +58,6 @@ public class WebSocketClientTest {
         Thread.sleep(seconds/5);
         client.closeConnection(1000,"Test complete");
         System.out.println(storage.getAllPatients().size()+" patients logged.");
+        storage.deleteInstance();
     }
 }

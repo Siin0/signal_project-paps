@@ -1,8 +1,6 @@
 package alerts;
 
-import com.alerts.AlertGenerator;
 import com.alerts.strategies.AlertStrategy;
-import com.alerts.strategies.BloodPressureStrategy;
 import com.alerts.strategies.HeartRateStrategy;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
@@ -16,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ECGAlertTest {
     @Test
     void testHeartRateStrategy(){
-        DataStorage storage = new DataStorage();
-        AlertGenerator alertGenerator = new AlertGenerator(storage);
+        DataStorage storage = DataStorage.getInstance();
 
         populate(storage);
 
@@ -57,6 +54,7 @@ public class ECGAlertTest {
         //check that the correct number of alerts were triggered in total
         assertEquals(0, healthyAlerts.size());
         assertEquals(7, unhealthyAlerts.size());
+        storage.deleteInstance();
     }
 
     public static void populate(DataStorage storage){
