@@ -14,7 +14,7 @@ public class BloodOxygenAlertFactory extends AlertFactory{
                 return new BloodOxygenAlert(patientID, condition, timestamp);
             case "hypotensiveHypoxemia":
                 return new HypotensiveHypoxemiaAlert(patientID, condition, timestamp);
-            case "manualTrigger":
+            case "manualAlert":
                 return new TriggeredAlert(patientID, condition, timestamp);
             default:
                 return super.createAlert(patientID, condition, timestamp);

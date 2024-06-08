@@ -7,58 +7,46 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HeartRateStrategy implements AlertStrategy{
     private long ecgTime;
     @Override
-    public String checkAlert(Patient patient) {
-        long first = patient.getPatientRecords().get(0).getTimestamp();
-        long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
+    public HashMap<Long, ArrayList<String>> checkAlert(Patient patient) {
+        HashMap<Long, ArrayList<String>> results = new HashMap<>();
+        List<PatientRecord> observationWindow = new ArrayList<>();
 
-        ArrayList<PatientRecord> array;
-        for (long i = first; i < last; i++) { // This is assuming the time diff is 1 every time, likely incorrect
-            array = (ArrayList<PatientRecord>) patient.getRecords(i, (i + 600000)); // 10 minutes in ms
-            for (int j = 0; j < array.size(); j++) {
-                if (!array.get(j).getRecordType().equals("ECG")) {
-                    array.remove(j);
-                    j--;
-                }
+        List<PatientRecord> ecgRecords = patient.getPatientRecords().stream()
+                .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
+                .filter(record -> record.getRecordType().equals("ECG"))
+                .collect(Collectors.toList());
+
+        for (PatientRecord record : ecgRecords) {
+            long time = record.getTimestamp();
+            results.putIfAbsent(time, new ArrayList<>());
+            //create a window to look at that includes the past 10 minutes
+            observationWindow = ecgRecords.stream()
+                    .collect(Collectors.partitioningBy(r -> r.getTimestamp() > (time - 600000))).get(true);
+
+            double average = observationWindow.stream()
+                    .mapToDouble(PatientRecord::getMeasurementValue)
+                    .average()
+                    .orElse(record.getMeasurementValue());
+
+            if (record.getMeasurementValue() > 120) {
+                results.get(time).add("highHeartRate");
+            } else if (record.getMeasurementValue() < 55) {
+                results.get(time).add("lowHeartRate");
             }
-
-            for(PatientRecord patientRecord : array) {
-                if(patientRecord.getMeasurementValue() < 50 ||
-                        patientRecord.getMeasurementValue() > 100) {
-                    ecgTime = patientRecord.getTimestamp();
-                    return "abnormalECG";
-                }
-            }
-
-            long aux = irregularPatterns(array);
-            if(aux > 0) {
-                ecgTime = aux;
-                return "abnormalECG";
-            }
-        }
-        ecgTime = System.currentTimeMillis();
-        return "noAlert";
-    }
-
-    private long irregularPatterns(ArrayList<PatientRecord> array) {
-
-        for (int i = 0; i < array.size() - 1; i++) {
-            if(Math.abs(array.get(i).getMeasurementValue() - array.get(i + 1).getMeasurementValue()) > 5) {
-                return array.get(i).getTimestamp();
+            if (Math.abs(record.getMeasurementValue() - average) > 10) {
+                results.get(time).add("abnormalECG");
             }
         }
-
-        return -1;
+        return results;
     }
-
-    @Override
-    public long getTimestamp() {
-        return ecgTime;
-    }
-
     @Override
     public AlertFactory createFactory() {
         return new ECGAlertFactory();

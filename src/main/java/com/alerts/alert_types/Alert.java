@@ -29,6 +29,6 @@ public class Alert {
     public void show(){
         String date = (new Date(getTimestamp())).toString();
         String id = this.getPatientId();
-        System.out.println("ALERT: Patient#"+id+" | "+condition+" | "+date);
+        //System.out.println("ALERT: Patient#"+id+" | "+condition+" | "+date);
     }
 }
