@@ -10,6 +10,8 @@ import com.alerts.AlertGenerator;
 import com.cardio_generator.generators.BloodPressureDataGenerator;
 import com.cardio_generator.outputs.WebSocketOutputStrategy;
 
+import javax.xml.crypto.Data;
+
 /**
  * Manages storage and retrieval of patient data within a healthcare monitoring
  * system.
@@ -17,14 +19,22 @@ import com.cardio_generator.outputs.WebSocketOutputStrategy;
  * patient IDs.
  */
 public class DataStorage {
+    private static DataStorage instance = null;
     private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
 
     /**
      * Constructs a new instance of DataStorage, initializing the underlying storage
      * structure.
      */
-    public DataStorage() {
+    private DataStorage() {
         this.patientMap = new HashMap<>();
+    }
+    
+    public static DataStorage getInstance() {
+        if(instance == null) {
+            instance = DataStorage.getInstance();
+        }
+        return instance;
     }
 
     /**
@@ -104,7 +114,7 @@ public class DataStorage {
     public static void main(String[] args) throws IOException, URISyntaxException {
         // DataReader is not defined in this scope, should be initialized appropriately.
         DataReader reader = new DataReaderClass();
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         
         WebSocketOutputStrategy test = new WebSocketOutputStrategy(8080);
         BloodPressureDataGenerator gen = new BloodPressureDataGenerator(100);

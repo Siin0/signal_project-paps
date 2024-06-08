@@ -16,7 +16,7 @@ public class AlertGeneratorTest {
 
     @Test
     void testECGTriggers(){
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         AlertGenerator alertGenerator = new AlertGenerator(storage);
 
         storage.addPatientData(100, 66, "ECG", 100000L);
@@ -48,7 +48,7 @@ public class AlertGeneratorTest {
 
     @Test
     void testAlertDataEval(){
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         AlertGenerator alertGenerator = new AlertGenerator(storage);
 
         storage.addPatientData(100, 135, "SystolicPressure", 100000L);
