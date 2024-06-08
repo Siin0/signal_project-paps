@@ -5,12 +5,7 @@ import com.data_management.DataStorage;
 import com.data_management.Patient;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AlertGeneratorTest {
 
@@ -54,7 +49,6 @@ public class AlertGeneratorTest {
         storage.addPatientData(100, 135, "SystolicPressure", 100000L);
         storage.addPatientData(100, 138, "SystolicPressure", 200000L);
         storage.addPatientData(100, 141, "ECG", 300000L);
-
 
         Patient healthyPatient = storage.getPatient(100);
         Patient unhealthyPatient = storage.getPatient(200);

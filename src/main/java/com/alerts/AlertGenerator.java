@@ -1,10 +1,6 @@
 package com.alerts;
 
 import com.alerts.alert_types.Alert;
-import com.alerts.factories.AlertFactory;
-import com.alerts.factories.BloodOxygenAlertFactory;
-import com.alerts.factories.BloodPressureAlertFactory;
-import com.alerts.factories.ECGAlertFactory;
 import com.alerts.strategies.*;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
