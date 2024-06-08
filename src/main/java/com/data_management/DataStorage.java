@@ -57,6 +57,14 @@ public class DataStorage {
     }
 
     /**
+     * Returns a patient matching the given ID
+     * @param patientID the ID to check
+     * @return the patient desired
+     */
+    public Patient getPatient(int patientID){
+        return patientMap.get(patientID);
+    }
+    /**
      * Retrieves a list of PatientRecord objects for a specific patient, filtered by
      * a time range.
      *

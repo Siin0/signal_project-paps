@@ -5,14 +5,14 @@ import com.data_management.DataStorage;
 import com.data_management.Patient;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AlertGenerationTest {
+public class AlertGeneratorTest {
 
     @Test
     void testECGTriggers(){
@@ -47,6 +47,17 @@ public class AlertGenerationTest {
     }
 
     @Test
-    void testAlertDataEval(){}
+    void testAlertDataEval(){
+        DataStorage storage = new DataStorage();
+        AlertGenerator alertGenerator = new AlertGenerator(storage);
+
+        storage.addPatientData(100, 135, "SystolicPressure", 100000L);
+        storage.addPatientData(100, 138, "SystolicPressure", 200000L);
+        storage.addPatientData(100, 141, "ECG", 300000L);
+
+
+        Patient healthyPatient = storage.getPatient(100);
+        Patient unhealthyPatient = storage.getPatient(200);
+    }
 
 }

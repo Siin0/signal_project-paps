@@ -5,6 +5,7 @@ import com.alerts.factories.AlertFactory;
 import com.alerts.factories.BloodOxygenAlertFactory;
 import com.alerts.factories.BloodPressureAlertFactory;
 import com.alerts.factories.ECGAlertFactory;
+import com.alerts.strategies.*;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
@@ -49,42 +50,28 @@ public class AlertGenerator {
      */
     public ArrayList<Alert> evaluateData(Patient patient) {
         ArrayList<Alert> alerts = new ArrayList<Alert>();
-        AlertFactory alertFactory;
-        String condition;
-        long timestamp;
+        AlertStrategy strategy;
 
-        condition = bloodPressureAlert(patient);
-        if (!condition.equals("noAlert")){
-            timestamp = bloodPressureTime;
-            alertFactory = new BloodPressureAlertFactory();
-            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
-        }
-        condition = bloodSaturationAlert(patient);
-        if (!condition.equals("noAlert")){
-            timestamp = bloodSaturationTime;
-            alertFactory = new BloodOxygenAlertFactory();
-            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
-        }
-        condition = ecgAlert(patient);
-        if (!condition.equals("noAlert")){
-            timestamp = ecgTime;
-            alertFactory = new ECGAlertFactory();
-            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
-        }
-        condition = comboAlert(patient);
-        if (!condition.equals("noAlert")){
-            timestamp = hhTime;
-            alertFactory = new BloodPressureAlertFactory();
-            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
-        }
-        condition = manualAlert(patient);
-        if (!condition.equals("noAlert")){
-            timestamp = manualTime;
-            alertFactory = new BloodPressureAlertFactory();
-            triggerAlert(alerts, alertFactory.createAlert(String.valueOf(patient.getID()), condition, timestamp));
-        }
+        strategy = new BloodPressureStrategy();
+        evaluateStrategy(patient, alerts, strategy);
+        strategy = new OxygenSaturationStrategy();
+        evaluateStrategy(patient, alerts, strategy);
+        strategy = new HeartRateStrategy();
+        evaluateStrategy(patient, alerts, strategy);
+        strategy = new HypotensiveHypoxemiaStrategy();
+        evaluateStrategy(patient, alerts, strategy);
+        strategy = new TriggeredAlertStrategy();
+        evaluateStrategy(patient, alerts, strategy);
 
         return alerts;
+    }
+
+    private void evaluateStrategy(Patient patient, ArrayList<Alert> alerts, AlertStrategy strategy){
+        String condition = strategy.checkAlert(patient);
+        if (!condition.equals("noAlert")){
+            triggerAlert(alerts, strategy.createFactory().createAlert(String.valueOf(patient.getID()),
+                    condition, strategy.getTimestamp()));
+        }
     }
 
     /**
