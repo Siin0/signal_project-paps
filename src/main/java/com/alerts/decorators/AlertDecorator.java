@@ -9,11 +9,8 @@ public class AlertDecorator implements AlertInterface {
     protected String condition;
     protected long timeStamp;
 
-    public AlertDecorator(AlertInterface alert, String patientID, String condition, long timeStamp) {
+    public AlertDecorator(AlertInterface alert) {
         this.alert = alert;
-        this.patientID = patientID;
-        this.condition = condition;
-        this.timeStamp = timeStamp;
     }
 
     @Override

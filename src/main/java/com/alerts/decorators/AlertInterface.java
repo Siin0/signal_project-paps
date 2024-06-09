@@ -10,3 +10,8 @@ public interface AlertInterface {
 
     public long getTimestamp();
 }
+enum priority {
+    LOW,
+    MEDIUM,
+    HIGH
+}

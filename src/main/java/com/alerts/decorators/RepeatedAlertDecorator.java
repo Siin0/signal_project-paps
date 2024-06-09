@@ -5,11 +5,10 @@ import com.data_management.DataStorage;
 import com.data_management.Patient;
 
 public class RepeatedAlertDecorator extends AlertDecorator {
-    private long interval; // Amount of delay between repeated alerts
+    private final long interval; // Amount of delay between repeated alerts
 
-    public RepeatedAlertDecorator(AlertInterface alert, String patientID,
-                                  String condition, long timeStamp, long interval) {
-        super(alert, patientID, condition, timeStamp);
+    public RepeatedAlertDecorator(AlertInterface alert, long interval) {
+        super(alert);
         this.interval = interval;
     }
 
@@ -20,7 +19,7 @@ public class RepeatedAlertDecorator extends AlertDecorator {
      * @return False if the conditions for an alert are active
      */
     private boolean checkAlert(AlertStrategy strategy) {
-        Patient patient = DataStorage.getInstance().getPatient(Integer.parseInt(patientID));
+        Patient patient = DataStorage.getInstance().getPatient(Integer.parseInt(alert.getPatientId()));
         return (strategy.checkAlert(patient).equals("noAlert"));
     }
 
@@ -42,8 +41,8 @@ public class RepeatedAlertDecorator extends AlertDecorator {
      */
     @Override
     public void show() {
-        if(timeStamp % interval == 0 && !checkStrategies()) {
-            super.show();
-        }
+        do {
+            alert.show();
+        } while(!checkStrategies() && alert.getTimestamp() % interval == 0);
     }
 }
