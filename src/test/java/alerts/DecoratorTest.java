@@ -26,5 +26,7 @@ public class DecoratorTest {
         // Test both decorators at the same time
         PriorityAlertDecorator bothDecorators = new PriorityAlertDecorator(repeat, 1);
         bothDecorators.show();
+
+        storage.deleteInstance();
     }
 }
