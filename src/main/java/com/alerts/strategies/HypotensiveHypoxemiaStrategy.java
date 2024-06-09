@@ -6,52 +6,40 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HypotensiveHypoxemiaStrategy implements AlertStrategy{
     private long hhTime;
     @Override
-    public String checkAlert(Patient patient) {
-        boolean sys = false;
-        boolean sat = false;
+    public HashMap<Long, ArrayList<String>> checkAlert(Patient patient) {
+        HashMap<Long, ArrayList<String>> results = new HashMap<>();
 
-        long first = patient.getPatientRecords().get(0).getTimestamp();
-        long last = patient.getPatientRecords().get(patient.getPatientRecords().size() - 1).getTimestamp();
+        List<PatientRecord> sysRecords = patient.getPatientRecords().stream()
+                .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
+                .filter(record -> (record.getRecordType().equals("BloodPressure")
+                        || record.getRecordType().equals("SystolicPressure")))
+                .collect(Collectors.toList());
 
-        ArrayList<PatientRecord> array;
-        for (long i = first; i < last; i++) {
-            array = (ArrayList<PatientRecord>) patient.getRecords(i, (i + 600000));
-            for (int j = 0; j < array.size(); j++) {
-                if (!(array.get(j).getRecordType().equals("BloodSaturation") ||
-                        array.get(j).getRecordType().equals("SystolicPressure"))) {
-                    array.remove(j);
-                    j--;
-                }
-            }
-            for (PatientRecord patientRecord : array) {
-                if(patientRecord.getRecordType().equals("SystolicPressure")) {
-                    if(patientRecord.getMeasurementValue() < 90) {
-                        hhTime = patientRecord.getTimestamp();
-                        sys = true;
-                    }
-                } else {
-                    if(patientRecord.getMeasurementValue() < 5) {
-                        hhTime = patientRecord.getTimestamp();
-                        sat = true;
+        List<PatientRecord> satRecords = patient.getPatientRecords().stream()
+                .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
+                .filter(record -> record.getRecordType().equals("BloodSaturation"))
+                .collect(Collectors.toList());
+
+        for(PatientRecord sysRecord : sysRecords){
+            for(PatientRecord satRecord : satRecords){
+                if(sysRecord.getTimestamp() == satRecord.getTimestamp()){
+                    long time = sysRecord.getTimestamp();
+                    results.putIfAbsent(time, new ArrayList<>());
+                    if(sysRecord.getMeasurementValue() < 90 && satRecord.getMeasurementValue() < 92){
+                        results.get(time).add("hypotensiveHypoxemia");
                     }
                 }
             }
         }
-        if (sat && sys){
-            return "hypotensiveHypoxemia";
-        } else {
-            hhTime = System.currentTimeMillis();
-            return "noAlert";
-        }
-    }
-
-    @Override
-    public long getTimestamp() {
-        return hhTime;
+        return results;
     }
 
     @Override

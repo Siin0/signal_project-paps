@@ -13,7 +13,13 @@ public class ECGAlert extends Alert{
         String id = this.getPatientId();
         switch(this.getCondition()){
             case "abnormalECG":
-                System.out.println("ALERT: Patient#"+id+" | Abnormal ECG data | "+date);
+                System.out.println("ALERT: Patient#"+id+" | Abnormal ECG pattern | "+date);
+                break;
+            case "highHeartRate":
+                System.out.println("ALERT: Patient#"+id+" | Elevated heart rate | "+date);
+                break;
+            case "lowHeartRate":
+                System.out.println("ALERT: Patient#"+id+" | Low heart rate | "+date);
                 break;
             default:
                 super.show();

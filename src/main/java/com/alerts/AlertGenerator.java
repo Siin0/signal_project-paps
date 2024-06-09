@@ -7,6 +7,7 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data
@@ -47,7 +48,6 @@ public class AlertGenerator {
     public ArrayList<Alert> evaluateData(Patient patient) {
         ArrayList<Alert> alerts = new ArrayList<Alert>();
         AlertStrategy strategy;
-
         strategy = new BloodPressureStrategy();
         evaluateStrategy(patient, alerts, strategy);
         strategy = new OxygenSaturationStrategy();
@@ -63,10 +63,15 @@ public class AlertGenerator {
     }
 
     private void evaluateStrategy(Patient patient, ArrayList<Alert> alerts, AlertStrategy strategy){
-        String condition = strategy.checkAlert(patient);
-        if (!condition.equals("noAlert")){
-            triggerAlert(alerts, strategy.createFactory().createAlert(String.valueOf(patient.getID()),
-                    condition, strategy.getTimestamp()));
+        HashMap<Long, ArrayList<String>> results = strategy.checkAlert(patient);
+        for (long timestamp : results.keySet()) {
+            ArrayList<String> conditions = results.get(timestamp);
+            for (String condition : conditions){
+                if (!condition.equals("noAlert")) {
+                    triggerAlert(alerts, strategy.createFactory().createAlert(String.valueOf(patient.getID()),
+                            condition, timestamp));
+                }
+            }
         }
     }
 

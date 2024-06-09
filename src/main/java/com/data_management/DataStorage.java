@@ -1,7 +1,6 @@
 package com.data_management;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +9,6 @@ import com.alerts.AlertGenerator;
 import com.cardio_generator.generators.BloodPressureDataGenerator;
 import com.cardio_generator.outputs.WebSocketOutputStrategy;
 
-import javax.xml.crypto.Data;
 
 /**
  * Manages storage and retrieval of patient data within a healthcare monitoring
@@ -20,7 +18,7 @@ import javax.xml.crypto.Data;
  */
 public class DataStorage {
     private static DataStorage instance = null;
-    private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
+    private final Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
 
     /**
      * Constructs a new instance of DataStorage, initializing the underlying storage
@@ -33,7 +31,7 @@ public class DataStorage {
     /**
      * Deletes the current instance of the data storage
      */
-    public static void deleteInstance() {
+    public void deleteInstance() {
         instance = null;
     }
 
@@ -69,7 +67,6 @@ public class DataStorage {
             patientMap.put(patientId, patient);
         }
         //check to overwrite matching records
-        List<PatientRecord> possibleDuplicates = patient.getRecords(timestamp,timestamp);
         for (PatientRecord record : patient.getPatientRecords()) {
             if(record.getRecordType().equals(recordType)){
                 patient.delRecord(recordType, timestamp);
@@ -123,7 +120,7 @@ public class DataStorage {
      * 
      * @param args command line arguments
      */
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws IOException{
         // DataReader is not defined in this scope, should be initialized appropriately.
         DataReader reader = new DataReaderClass();
         DataStorage storage = DataStorage.getInstance();

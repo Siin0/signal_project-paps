@@ -13,8 +13,9 @@ public class TriggeredAlert extends Alert{
         String date = (new Date(getTimestamp())).toString();
         String id = this.getPatientId();
         switch(this.getCondition()){
-            case "manualTrigger":
+            case "manualAlert":
                 System.out.println("ALERT: Patient#"+id+" | Alert triggered manually | "+date);
+                break;
             default:
                 super.show();
         }

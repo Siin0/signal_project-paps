@@ -9,8 +9,10 @@ public class ECGAlertFactory extends AlertFactory{
     public Alert createAlert(String patientID, String condition, long timestamp) {
         switch(condition){
             case "abnormalECG":
+            case "highHeartRate":
+            case "lowHeartRate":
                 return new ECGAlert(patientID, condition, timestamp);
-            case "manualTrigger":
+            case "manualAlert":
                 return new TriggeredAlert(patientID, condition, timestamp);
             default:
                 return super.createAlert(patientID, condition, timestamp);

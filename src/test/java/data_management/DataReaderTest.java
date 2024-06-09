@@ -17,6 +17,7 @@ public class DataReaderTest {
         reader.readFile(dataStorage, "src/test/java/data_management/test.txt");
         assertEquals(29310, dataStorage.getRecords(300, 0L, 999999999L).get(0).getMeasurementValue());
         assertEquals("BloodPressure", dataStorage.getRecords(200, 0L, 999999999L).get(0).getRecordType());
+        dataStorage.deleteInstance();
     }
 
 }
